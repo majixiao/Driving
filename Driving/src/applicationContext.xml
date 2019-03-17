@@ -1,0 +1,143 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+	<!-- 引入外部文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"></property>
+		<property name="jdbcUrl" value="${jdbc.url}"></property>
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+
+	</bean>
+	<!-- 配置hibernate的相关信息 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置hibernate的其他属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.connection.autocommit">false</prop>
+
+			</props>
+		</property>
+		<!-- 配置hiberna的映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>cn/mjx/students/vo/Students.hbm.xml</value>
+				<value>cn/mjx/appointment/vo/Appointment.hbm.xml</value>
+				<value>cn/mjx/coach/vo/Coach.hbm.xml</value>
+				<value>cn/mjx/record/vo/Record.hbm.xml</value>
+
+				<value>cn/mjx/admin/vo/AdminUser.hbm.xml</value>
+			</list>
+		</property>
+
+		<!-- 事务的管理 -->
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 开启事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 页面挑战 -->
+	<bean id="pageAction" class="cn.mjx.page.action.PageAction" scope="prototype">
+		<property name="studentsService" ref="studentsService"></property>
+		<property name="coachService" ref="coachService"></property>
+	</bean>
+	<!-- 首页action -->
+	<bean id="indexAction" class="cn.mjx.index.action.IndexAction"
+		scope="prototype"></bean>
+	<!-- 注册的action -->
+	<bean id="loginAction" class="cn.mjx.login.action.LoginAction"
+		scope="prototype"></bean>
+	<!-- 预约表的aciton -->
+	<bean id="appointmentAction" class="cn.mjx.appointment.action.AppointmentAction"
+		scope="prototype">
+		<property name="appointmentService" ref="appointmentService"></property>
+		<property name="recordService" ref="recordService"></property>
+
+	</bean>
+
+	<!-- 验证码 -->
+	<bean id="checkimgAction" class="cn.mjx.util.CheckImgAction"
+		scope="prototype"></bean>
+	<bean id="studentsAction" class="cn.mjx.students.action.StudentsAction"
+		scope="prototype">
+		<property name="studentsService" ref="studentsService"></property>
+		<property name="appointmentService" ref="appointmentService"></property>
+		<property name="coachService" ref="coachService"></property>
+	</bean>
+	<bean id="coachAction" class="cn.mjx.coach.action.CoachAction"
+		scope="prototype">
+		<property name="coachService" ref="coachService"></property>
+	</bean>
+	<bean id="coachSelectAction" class="cn.mjx.coach.action.CoachSelectAction"
+		scope="prototype">
+		<property name="coachService" ref="coachService"></property>
+		<property name="studentsService" ref="studentsService"></property>
+	</bean>
+	<bean id="recordAction" class="cn.mjx.record.action.RecordAction"
+		scope="prototype">
+		<property name="recordService" ref="recordService"></property>
+		<property name="appointmentService" ref="appointmentService"></property>
+	</bean>
+	<bean id="adminStuAction" class="cn.mjx.adminStu.action.AdminStuAction"
+		scope="prototype">
+		<property name="studentsService" ref="studentsService"></property>
+	</bean>
+	<bean id="adminCoaAction" class="cn.mjx.adminCoa.action.AdminCoaAction"
+		scope="prototype">
+		<property name="coachService" ref="coachService"></property>
+	<property name="appointmentService" ref="appointmentService"></property>
+	</bean>
+
+	<bean id="adminAppointAction" class="cn.mjx.adminAppoint.action.AdminAppointAction"
+		scope="prototype">
+		<property name="appointmentService" ref="appointmentService"></property>
+		<property name="coachService" ref="coachService"></property>
+	</bean>
+	<!-- Service -->
+	<bean id="studentsService" class="cn.mjx.students.service.StudentsService">
+		<property name="studentsDao" ref="studentsDao"></property>
+	</bean>
+
+	<bean id="coachService" class="cn.mjx.coach.service.CoachService">
+		<property name="coachDao" ref="coachDao"></property>
+	</bean>
+	<bean id="appointmentService" class="cn.mjx.appointment.service.AppointmentService">
+		<property name="appointmentDao" ref="appointmentDao"></property>
+	</bean>
+	<bean id="recordService" class="cn.mjx.record.service.RecordService">
+		<property name="recordDao" ref="recordDao" />
+	</bean>
+	<!-- Dao -->
+	<bean id="studentsDao" class="cn.mjx.students.dao.StudentsDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="coachDao" class="cn.mjx.coach.dao.CoachDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="appointmentDao" class="cn.mjx.appointment.dao.AppointmentDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="recordDao" class="cn.mjx.record.dao.RecordDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+</beans>
+

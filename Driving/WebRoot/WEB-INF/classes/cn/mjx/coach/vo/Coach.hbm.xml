@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.mjx.coach.vo.Coach" table="coach">
+		<id name="cid">
+			<generator class="native"></generator>
+		</id>
+
+		<property name="cphone"></property>
+		<property name="cname"></property>
+		<property name="cnumber"></property>
+		<property name="cmodel"></property>
+		<property name="cdrivetime"></property>
+		<property name="cdesc"></property>
+		<property name="cpwd"></property>
+		<property name="cdate" type="date"></property>
+		<property name="cstate"></property>
+		<property name="cemail"></property>
+		<property name="cage"></property>
+		<property name="csex"></property>
+		<set name="appointment" cascade="all" lazy="false" inverse="true">
+			<key column="cid"></key>
+			<one-to-many class="cn.mjx.appointment.vo.Appointment" />
+		</set>
+	</class>
+</hibernate-mapping>

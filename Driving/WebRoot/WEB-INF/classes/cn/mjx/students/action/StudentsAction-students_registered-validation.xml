@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="sname">
+		<field-validator type="requiredstring">
+			<message>用户名不能为空！</message>
+		</field-validator>
+	</field>
+	<field name="spw">
+		<field-validator type="requiredstring">
+			<message>密码不能为空！</message>
+		</field-validator>
+	</field>
+	<field name="sage">
+		<field-validator type="int" short-circuit="true">
+			<param name="min">5</param>
+			<param name="max">80</param>
+			<message>输入年龄必须在5到80之间</message>
+		</field-validator>
+
+
+	</field>
+	<field name="sphone">
+		<field-validator type="stringlength">
+			<param name="minlength">11</param>
+			<param name="maxlength">11</param>
+			<message>请填写正确的手机号！！</message>
+		</field-validator>
+		<field-validator type="requiredstring">
+			<message>手机号不能为空！</message>
+		</field-validator>
+	</field>
+
+</validators>

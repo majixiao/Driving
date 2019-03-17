@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    <hibernate-mapping>
+    <class name="cn.mjx.students.vo.Students" table="students">
+    <id name="sid">
+    <generator class="native"></generator>
+    </id>
+      <property name="sname"></property>
+    <property name="sphone"></property>
+     <property name="ssex"></property>
+      <property name="sage"></property>
+       <property name="spw"></property>
+        <property name="semail"></property>
+        <set name="records" cascade="all" inverse="true" lazy="false">
+			<key column="sid"></key>
+			<one-to-many class="cn.mjx.record.vo.Record" />
+		</set>
+    </class>
+    
+    
+    
+    
+    </hibernate-mapping>

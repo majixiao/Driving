@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="pname">
+		<field-validator type="requiredstring">
+			<message>名称不能为空！</message>
+		</field-validator>
+	</field>
+	<field name="pdesc">
+		<field-validator type="requiredstring">
+			<message>输入对预约的描述</message>
+		</field-validator>
+	</field>
+	<field name="pnumber">
+		<field-validator type="int" short-circuit="true">
+			<param name="min">0</param>
+			<param name="max">1000</param>
+			<message>输入合适数字！！</message>
+		</field-validator>
+
+
+	</field>
+
+
+</validators>

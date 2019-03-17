@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.mjx.appointment.vo.Appointment" table="appointment">
+		<id name="pid">
+			<generator class="native"></generator>
+		</id>
+		<property name="pname"></property>
+		<property name="pnumber"></property>
+		<property name="pdate" type="date"></property>
+		<property name="premaining"></property>
+		<property name="pstarttime" type="date"></property>
+		<property name="pdesc"></property>
+		<many-to-one name="coach" column="cid" class="cn.mjx.coach.vo.Coach"
+			cascade="save-update" lazy="false"></many-to-one>
+		<set name="records" cascade="all" inverse="true" lazy="false">
+			<key column="pid"></key>
+			<one-to-many class="cn.mjx.record.vo.Record" />
+		</set>
+	</class>
+</hibernate-mapping>

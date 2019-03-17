@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<constant name="struts.devMOde" value="false"></constant>
+
+	<package name="driving" extends="struts-default" namespace="/"><!-- -->
+		<interceptors>
+			<interceptor name="myInterceptor" class="cn.mjx.interceptor.MyInterceptor"></interceptor>
+			<interceptor name="adminInterceptor" class="cn.mjx.interceptor.AdminInterceptor"></interceptor>
+
+		</interceptors>
+		<global-results>
+			<result name="error">/WEB-INF/jsp/index.jsp</result>
+			<result name="adminerror">/admin/admin/index.jsp</result>
+		</global-results>
+		<action name="index" class="indexAction" method="index">
+			<result name="success">/WEB-INF/jsp/index.jsp</result>
+
+		</action>
+		<!-- 页面跳转 -->
+		<action name="page_*" class="pageAction" method="{1}">
+
+			<result name="studentsSelect" type="chain">coachSelect_studentSelect
+			</result>
+			<result name="editAppointment">WEB-INF/jsp/editAppointment.jsp</result>
+			<result name="recordFail">/WEB-INF/jsp/index.jsp</result>
+			<result name="recordSuccess">/WEB-INF/jsp/index.jsp</result>
+			<result name="recordAgain">/WEB-INF/jsp/index.jsp</result>
+			<result name="recordDelete">/WEB-INF/jsp/index.jsp</result>
+			<result name="chanelRecord">/WEB-INF/jsp/index.jsp</result>
+			<result name="chanelFail">/WEB-INF/jsp/index.jsp</result>
+			<result name="adminlogin">/admin/admin/index.jsp</result>
+			<result name="forget">/WEB-INF/jsp/login/forget.jsp</result>
+			<result name="sendEmail">/WEB-INF/jsp/index.jsp</result>
+		</action>
+		<!-- 登录跳转 -->
+		<action name="login" class="indexAction" method="login">
+			<result name="success">/WEB-INF/jsp/login/login.jsp</result>
+		</action>
+		<!-- 验证码 -->
+		<action name="checkImg" class="checkimgAction">
+		</action>
+		<!--用户和学员 进行注册 -->
+		<action name="registered_*" class="loginAction" method="{1}">
+
+			<result name="stuSignUp">/WEB-INF/jsp/login/stuSignUp.jsp</result>
+			<result name="coachSignUp">/WEB-INF/jsp/login/coachSignUp.jsp</result>
+			<result name="updateStu">/WEB-INF/jsp/stuUpdate.jsp</result>
+			<result name="updateCoach">/WEB-INF/jsp/coachUpdate.jsp</result>
+			<result name="toHome">/WEB-INF/jsp/index.jsp</result>
+		</action>
+		<action name="students_*" method="{1}" class="studentsAction">
+			<interceptor-ref name="myInterceptor">
+				<param name="excludeMethods">login,registeredFail,registered,lookAppointment,ajax</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="registered">/WEB-INF/jsp/login/login.jsp
+			</result>
+			<result name="registeredFail">/WEB-INF/jsp/login/stuSignUp.jsp</result>
+			<result name="input">/WEB-INF/jsp/login/stuSignUp.jsp</result>
+			<result name="loginIn" type="redirectAction">index</result>
+			<result name="loginFail">/WEB-INF/jsp/login/login.jsp</result>
+			<result name="loginOut" type="redirectAction">index</result>
+			<result name="update" type="redirectAction">index</result>
+			<result name="coachLogin" type="chain">coach_login</result>
+			<result name="lookAppointment">/WEB-INF/jsp/lookAppointment.jsp</result>
+			<result name="stulookAppointment">/WEB-INF/jsp/stuLookAppointment.jsp</result>
+			<result name="coachSelect">/WEB-INF/jsp/coachSelect.jsp</result>
+			<result name="selectBycname">/WEB-INF/jsp/coachSelect.jsp</result>
+			<result name="selectBycid">/WEB-INF/jsp/coachSelect.jsp</result>
+			<result name="stuRecordAppointment">/WEB-INF/jsp/stuRecordAppointment.jsp</result>
+		</action>
+		<!-- 教练注册登录 -->
+		<action name="coach_*" class="coachAction" method="{1}">
+			<interceptor-ref name="myInterceptor">
+				<param name="includeMethods">update,delete</param>
+			</interceptor-ref>
+
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="registered">/WEB-INF/jsp/login/login.jsp
+			</result>
+			<result name="registeredFail">/WEB-INF/jsp/login/coachSignUp.jsp
+			</result>
+			<result name="input">/WEB-INF/jsp/login/coachSignUp.jsp</result>
+			<result name="login" type="redirectAction">index</result>
+			<result name="loginFail">/WEB-INF/jsp/login/login.jsp</result>
+			<result name="loginOut" type="redirectAction">index</result>
+			<result name="update" type="redirectAction">index</result>
+			<result name="delete" type="redirectAction">index</result>
+		</action>
+
+		<!-- 教练功能模块 -->
+		<action name="coachSelect_*" class="coachSelectAction" method="{1}">
+			<interceptor-ref name="myInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="studentSelect">WEB-INF/jsp/studentsSelect.jsp</result>
+			<result name="selectBysname">WEB-INF/jsp/studentsSelect.jsp</result>
+		</action>
+
+		<action name="appointment_*" class="appointmentAction" method="{1}">
+			<interceptor-ref name="myInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="saveAppointmnet" type="redirectAction">registered_toHome</result>
+			<result name="input">WEB-INF/jsp/editAppointment.jsp</result>
+			<result name="selectAppointment">/WEB-INF/jsp/selectAppointment.jsp</result>
+			<result name="selectBypid">WEB-INF/jsp/selectBypid.jsp</result>
+			<result name="delete" type="redirectAction">appointment_selectAppointment?page=1
+			</result>
+		</action>
+		<action name="record_*" class="recordAction" method="{1}">
+			<interceptor-ref name="myInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="recordFail" type="redirectAction">page_recordFail</result>
+			<result name="recordAppointment" type="redirectAction">page_recordSuccess
+			</result>
+			<result name="recordAgain" type="redirectAction">page_recordAgain</result>
+			<result name="selectRecord">/WEB-INF/jsp/myRecord.jsp</result>
+			<result name="delete" type="redirectAction">page_recordDelete</result>
+			<result name="chanelRecord" type="redirectAction">page_chanelRecord</result>
+			<result name="chanelFail" type="redirectAction">page_chanelFail</result>
+		</action>
+		<action name="adminStu_*" class="adminStuAction" method="{1}">
+			<interceptor-ref name="adminInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+
+			<result name="login">/admin/admin/home.jsp</result>
+			<result name="loginFail">/admin/admin/index.jsp</result>
+			<result name="findall">/admin/admin/student/list.jsp</result>
+			<result name="delete" type="redirectAction">adminStu_findAll
+			</result>
+			<result name="edit">/admin/admin/student/edit.jsp</result>
+			<result name="editover" type="redirectAction">adminStu_findAll</result>
+		</action>
+
+		<action name="adminCoa_*" class="adminCoaAction" method="{1}">
+			<interceptor-ref name="adminInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="findAll">/admin/admin/coach/list.jsp</result>
+			<result name="delete" type="redirectAction">adminCoa_findAll</result>
+			<result name="pass" type="redirectAction">adminCoa_findAll</result>
+			<result name="edit">/admin/admin/coach/edit.jsp</result>
+			<result name="editover" type="redirectAction">adminCoa_findAll</result>
+		</action>
+		<action name="adminAppoint_*" class="adminAppointAction"
+			method="{1}">
+			<interceptor-ref name="adminInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="findAll">/admin/admin/appointment/list.jsp</result>
+			<result name="delete" type="redirectAction">adminAppoint_findAll</result>
+			<result name="edit">/admin/admin/appointment/edit.jsp</result>
+			<result name="editover" type="redirectAction">adminAppoint_findAll</result>
+		</action>
+	</package>
+</struts>
